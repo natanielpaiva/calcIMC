@@ -20,6 +20,34 @@ export default function App() {
     setImc(imcValue);
   };
 
+  const getIMCStatus = (imc) => {
+    if (imc < 18.5) {
+      return {
+        color: '#FFD700',
+        message: 'Magreza',
+        description: 'Você está abaixo do peso ideal. Consulte um nutricionista para uma dieta balanceada.',
+      };
+    } else if (imc < 24.9) {
+      return {
+        color: '#32CD32',
+        message: 'Normal',
+        description: 'Seu peso está dentro da faixa considerada saudável. Parabéns!',
+      };
+    } else if (imc < 29.9) {
+      return {
+        color: '#FFA500',
+        message: 'Sobrepeso',
+        description: 'Você está acima do peso ideal. Considere adotar hábitos mais saudáveis.',
+      };
+    } else {
+      return {
+        color: '#FF0000',
+        message: 'Obesidade',
+        description: 'Você está na faixa de obesidade. Procure um médico para orientações.',
+      };
+    }
+  };
+
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Calculadora de IMC</Text>
@@ -43,17 +71,11 @@ export default function App() {
       <Button title="Calcular IMC" onPress={calculateIMC} />
       
       {imc && (
-        <Text style={styles.result}>
-          Seu IMC é: {imc}
-          {'\n'}
-          {imc < 18.5
-            ? 'Abaixo do peso'
-            : imc < 24.9
-            ? 'Peso normal'
-            : imc < 29.9
-            ? 'Sobrepeso'
-            : 'Obesidade'}
-        </Text>
+        <View style={[styles.resultContainer, { backgroundColor: getIMCStatus(imc).color }]}>
+          <Text style={styles.resultText}>Seu IMC é: {imc}</Text>
+          <Text style={styles.resultText}>Classificação: {getIMCStatus(imc).message}</Text>
+          <Text style={styles.descriptionText}>{getIMCStatus(imc).description}</Text>
+        </View>
       )}
     </View>
   );
@@ -78,9 +100,21 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     paddingHorizontal: 10,
   },
-  result: {
+  resultContainer: {
     marginTop: 20,
+    padding: 15,
+    borderRadius: 10,
+    alignItems: 'center',
+  },
+  resultText: {
     fontSize: 18,
+    fontWeight: 'bold',
+    color: '#000',
+  },
+  descriptionText: {
+    fontSize: 16,
+    marginTop: 10,
     textAlign: 'center',
+    color: '#000',
   },
 });
